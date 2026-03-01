@@ -1,0 +1,60 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+ /**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+int calcLen(ListNode* head){
+    ListNode* temp = head;
+    int len= 0;
+    while(temp){
+        temp = temp->next;
+        len++;
+    }
+    return len;
+}
+
+   ListNode* reverseKGroup(ListNode* head, int k){
+    if(!head || !head->next) return head; 
+    ListNode* dummy = new ListNode(0);
+    dummy->next  = head;
+    ListNode* gprev = dummy;
+    ListNode* curr = dummy->next;
+    
+    int len = calcLen(head);
+    int time_reversed = len/k;
+    while(time_reversed--){
+        // Node* prev = reverseList2(gprev,1,k); // 1 based index pos
+        // Node* is not pass by reference but pass by value 
+        // but the memory changes cause it shares memory location pointer
+
+        // for the next k times detach the forward and attach it to the next of prev
+        for(int i=0;i<k-1;i++){
+            ListNode* forward = curr->next;
+            curr->next = forward->next;
+            forward->next = gprev->next;
+            gprev->next = forward;
+        }
+        gprev = curr;
+        curr = gprev->next;
+    }
+    return dummy->next;
+}
+};
