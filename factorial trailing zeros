@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int trailingZeroes(int n) {
+        long long powerOfFive = 5;
+        long long countOfZero = 0;
+
+        while(n/powerOfFive)
+        {
+            countOfZero+=n/powerOfFive;
+            powerOfFive*=5;
+        }
+
+        
+        //INSTEAD OF INCREASING THE POWER OF FIVE LIKE
+        //5 25 125 ..... 
+        //YOU CAN SIPMLY DIVIDE THE n BY 5 IN EACH ITERATION 
+        //THUS AVOIDING THE INTEGER OVERFLOW
+
+        //while(n/powerOfFive)
+        //{
+        //    countOfZero+=n/powerOfFive;
+        //    n/=powerOfFive;
+        //}
+        //YOU CAN USE THIS CODE SNIPPET INSTEAD OF THE ABOVE USED CODE
+
+        return countOfZero;
+    }
+};
