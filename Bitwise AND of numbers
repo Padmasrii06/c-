@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int rangeBitwiseAnd(int left, int right) {
+        int i = 0;
+        
+        // Find the common prefix by removing differing bits
+        while(left != right) {
+            left >>= 1;   // Remove the least significant bit
+            right >>= 1;  // Remove the least significant bit
+            i++;          // Count how many bits we've removed
+        }
+        
+        // Left-shift the common prefix to restore original bit positions
+        // with zeros in the lower bits
+        return (left << i);
+    }
+};
