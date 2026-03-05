@@ -1,0 +1,28 @@
+ class Solution {
+ public:
+     int maxProfit(int k, vector<int>& prices) {
+         // no transaction, no profit
+         if(k == 0) return 0;
+
+         int n = prices.size();
+
+         vector<vector<int>> dp(k+1, vector<int>(n,0));
+
+         for(int t = 1; t <= k; t++){
+             for(int currDay = 1; currDay < n; currDay++){
+                 // if we don't sell on curr day
+                 dp[t][currDay] = dp[t][currDay-1];
+
+                 // if we sell on curr day and we bought on a prev day
+                 for(int prevDay = 0; prevDay < currDay; prevDay++){
+                     dp[t][currDay] = max(
+                         dp[t][currDay],
+                         prices[currDay] - prices[prevDay] + dp[t-1][prevDay]
+                     );
+                 }
+             }
+         }
+
+         return dp[k][n-1];
+     }
+ };
