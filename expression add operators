@@ -1,0 +1,37 @@
+class Solution {
+public:
+    void dfs(string num,int target,int start,long long cur_val,long long last_op,string exp,vector<string> &res)
+    {
+        if(start==num.size())
+        {
+            if(cur_val==target)
+            {
+                res.push_back(exp);
+                return;
+            }
+        }
+
+        for(int i=start;i<num.size();i++)
+        {
+            if(i>start && num[start]=='0') return;
+
+            string cur_num=num.substr(start,i-start+1);
+            long long cur_num_val=stoll(cur_num);
+
+            if(start==0)
+            {
+                dfs(num,target,i+1,cur_num_val,cur_num_val,cur_num,res);
+            }
+            else{
+                dfs(num, target, i + 1, cur_val + cur_num_val, cur_num_val, exp + "+" + cur_num, res);
+                dfs(num, target, i + 1, cur_val - cur_num_val, -cur_num_val, exp + "-" + cur_num, res);
+                dfs(num, target, i + 1, cur_val - last_op + last_op * cur_num_val, last_op * cur_num_val, exp + "*" + cur_num, res);
+            }
+        }
+    }
+    vector<string> addOperators(string num, int target) {
+        vector<string> res;
+        dfs(num,target,0,0,0,"",res);
+        return res;
+    }
+};
