@@ -1,0 +1,64 @@
+inline constexpr int N = (1 << 19) + 123;
+// Use an array for the segment tree as a hash table to handle huge ranges
+#define hash(value) (value) % N 
+
+class Solution {
+    class SegmentTree {
+        public:
+        SegmentTree(int64_t n): n(n) {
+            _tree.fill(0);
+        }
+
+        void update(int64_t l, int64_t r, int v) noexcept {
+            for(l += n, r += n; l < r; l >>= 1, r >>= 1) {
+                if(l & 1) _tree[hash(l++)] = std::max(_tree[hash(l)], v);
+                if(r & 1) _tree[hash(--r)] = std::max(_tree[hash(r - 1)], v);
+            }
+        }
+
+        int query(int p) noexcept {
+            int max = 0;
+            for(int64_t i = p + n; i > 0; i >>= 1) {
+                max = std::max(max, _tree[hash(i)]);
+            }
+            return max;
+        }
+    private:
+        int64_t n;
+        std::array<int, N> _tree;
+    };
+
+public:
+    vector<vector<int>> getSkyline(const vector<vector<int>>& buildings) {
+        // 1. Collect all points and sort it to make queries for each.
+        std::vector<int> points;
+        points.reserve(buildings.size() * 2);
+
+        for(const auto& building: buildings) {
+            points.push_back(building[0]);
+            points.push_back(building[1]);
+        }
+
+        std::sort(points.begin(), points.end());
+    
+        const int64_t n = points.back();
+        SegmentTree tree(n + 1);
+
+        // 2. Build segment tree
+        for(const auto& building: buildings) {
+          tree.update(building[0], building[1], building[2]);
+        }
+        vector<vector<int>> res;
+        int prev{0};
+
+        // 3. Make queries
+        for(const auto p: points) {
+          const auto v = tree.query(p);
+          if(prev != v) {
+            res.push_back({p, v});
+            prev = v;
+          }
+        }
+        return res;
+    }
+};
