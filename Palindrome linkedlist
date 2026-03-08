@@ -1,0 +1,50 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+class Solution {
+public:
+
+    //Recursive function to build reverse string
+    void ispal(ListNode* head, string& st) {
+        if (head == NULL) return;
+
+        //Go to the end first
+        ispal(head->next, st);
+
+        //Add value while returning
+        st.push_back(head->val + '0');
+    }
+
+    bool isPalindrome(ListNode* head) {
+        if (head == NULL) return true;
+
+        string st1;
+        string st2;
+
+        //Reserve space for better performance
+        st1.reserve(100000);
+        st2.reserve(100000);
+
+        //Build forward string
+        ListNode* temp = head;
+
+        while (temp != NULL) {
+            st1.push_back(temp->val + '0');
+            temp = temp->next;
+        }
+
+        //Build reverse string using recursion
+        ispal(head, st2);
+
+        //Compare both strings
+        return st1 == st2;
+    }
+};
