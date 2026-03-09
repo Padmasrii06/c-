@@ -1,0 +1,48 @@
+class Solution {
+public:
+    void gameOfLife(vector<vector<int>>& board) {
+        int m = board.size();
+        int n = board[0].size();
+
+        // Helper lambda to count live neighbors
+        auto liveNeighbors = [&](int r, int c) {
+            int cnt = 0;
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    if (i == 0 && j == 0) continue; // skip self
+                    int nr = r + i, nc = c + j;
+
+                    if (nr >= 0 && nr < m && nc >= 0 && nc < n) {
+                        // Originally alive → 1 or -1
+                        if (board[nr][nc] == 1 || board[nr][nc] == -1)
+                            cnt++;
+                    }
+                }
+            }
+            return cnt;
+        };
+
+        // 1. Apply rules with temporary states
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int live = liveNeighbors(i, j);
+
+                if (board[i][j] == 1) {
+                    if (live < 2 || live > 3)
+                        board[i][j] = -1; // live → dead
+                } else {
+                    if (live == 3)
+                        board[i][j] = 2; // dead → live
+                }
+            }
+        }
+
+        // 2. Finalize board by converting temporary values
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == -1) board[i][j] = 0;
+                if (board[i][j] == 2)  board[i][j] = 1;
+            }
+        }
+    }
+};
